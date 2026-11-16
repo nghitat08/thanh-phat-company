@@ -1,0 +1,79 @@
+' Sơ đồ Use Case: Hệ thống quản lý cửa hàng Thành Phát
+' Mô tả ai (tác nhân) làm được gì (use case) trong hệ thống bán hàng – công nợ – kho.
+' Chủ cửa hàng kế thừa toàn bộ quyền của Nhân viên bán hàng và Thủ kho.
+@startuml
+left to right direction
+
+' ===== Tác nhân (đứng ngoài hệ thống) =====
+actor "Nhân viên bán hàng" as NVBH
+actor "Thủ kho" as TK
+actor "Chủ cửa hàng" as CHU
+
+' Kế thừa: Chủ làm được mọi việc của NVBH và Thủ kho
+CHU --|> NVBH
+CHU --|> TK
+
+rectangle "Hệ thống quản lý cửa hàng Thành Phát" {
+  ' --- Dùng chung ---
+  usecase "UC01 - Đăng nhập" as UC01
+
+  ' --- Bán hàng & công nợ ---
+  usecase "UC02 - Tra cứu tồn kho" as UC02
+  usecase "UC03 - Báo giá" as UC03
+  usecase "UC04 - Lập phiếu bán" as UC04
+  usecase "UC05 - Ghi công nợ" as UC05
+  usecase "UC06 - Thu tiền công nợ" as UC06
+  usecase "UC07 - Nhận hàng trả lại" as UC07
+  usecase "UC08 - Quản lý khách hàng" as UC08
+
+  ' --- Kho ---
+  usecase "UC09 - Lập phiếu nhập" as UC09
+  usecase "UC10 - Kiểm kê kho" as UC10
+  usecase "UC11 - Quản lý nhà cung cấp" as UC11
+  usecase "UC12 - Cập nhật tồn kho" as UC12
+
+  ' --- Quản lý & báo cáo (Chủ) ---
+  usecase "UC13 - Quản lý hàng hóa" as UC13
+  usecase "UC14 - Xem cảnh báo hàng" as UC14
+  usecase "UC15 - Xem biên bản kiểm kê" as UC15
+  usecase "UC16 - Xem báo cáo lãi" as UC16
+  usecase "UC17 - Xem báo cáo công nợ" as UC17
+  usecase "UC18 - Xem báo cáo doanh số nhân viên" as UC18
+  usecase "UC19 - Quản lý tài khoản nhân viên" as UC19
+}
+
+' ===== Nhân viên bán hàng =====
+NVBH --> UC01
+NVBH --> UC02
+NVBH --> UC03
+NVBH --> UC04
+NVBH --> UC06
+NVBH --> UC07
+NVBH --> UC08
+
+' ===== Thủ kho =====
+TK --> UC01
+TK --> UC09
+TK --> UC10
+TK --> UC11
+
+' ===== Chủ cửa hàng (ngoài phần kế thừa) =====
+CHU --> UC13
+CHU --> UC14
+CHU --> UC15
+CHU --> UC16
+CHU --> UC17
+CHU --> UC18
+CHU --> UC19
+
+' ===== include: A luôn gọi B =====
+UC03 ..> UC02 : <<include>>
+UC04 ..> UC02 : <<include>>
+UC04 ..> UC12 : <<include>>
+UC07 ..> UC12 : <<include>>
+UC09 ..> UC12 : <<include>>
+UC10 ..> UC12 : <<include>>
+
+' ===== extend: phần mở rộng -> use case gốc =====
+UC05 ..> UC04 : <<extend>>
+@enduml

@@ -1,0 +1,17 @@
+# Danh sách tệp/thư mục Git sẽ bỏ qua (không đưa lên kho mã).
+# Mục đích: không lộ mật khẩu/API key và không đẩy tệp rác của máy cá nhân.
+
+# Biến môi trường thật (chứa bí mật) – chỉ đưa .env.example lên Git
+.env
+.env.local
+
+# Cấu hình Claude Code riêng của từng máy
+.claude/settings.local.json
+
+# Tệp rác của hệ điều hành / trình soạn thảo
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Phòng khi sau này dùng công cụ Node.js
+node_modules/

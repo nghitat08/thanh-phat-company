@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<!--
+  Landing page giới thiệu cửa hàng Thành Phát (đồ cơ khí & vật tư xây dựng).
+  Gồm các khối: thanh trên cùng, menu, hero, giới thiệu, sản phẩm, lý do chọn, kho hàng & đội ngũ, liên hệ + footer.
+  Bố cục tham khảo ecount.com/vn; nội dung, liên hệ là demo; ảnh demo từ Unsplash (xem images/NGUON-ANH.md).
+-->
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thành Phát – Đồ cơ khí & Vật tư xây dựng</title>
+  <meta name="description" content="Cửa hàng Thành Phát: ốc vít, bu lông, dây điện, dụng cụ cơ khí và vật tư xây dựng. Bán lẻ và bán sỉ cho nhà thầu.">
+
+  <!-- Font Be Vietnam Pro: hiển thị dấu tiếng Việt đẹp, tải từ Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== Biến màu & kích thước dùng chung: đổi 1 chỗ là đổi cả trang ===== */
+    :root {
+      --primary: #0b3c7d;       /* xanh dương đậm – màu thương hiệu */
+      --primary-dark: #082c5c;
+      --accent: #1e6fd9;        /* xanh sáng – nút, liên kết */
+      --bg-soft: #f3f6fb;       /* nền xám-xanh nhạt cho các khối xen kẽ */
+      --text: #1d2939;
+      --text-muted: #5b6b80;
+      --border: #dfe6f0;
+      --white: #ffffff;
+      --radius: 12px;
+      --container: 1180px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }  /* bấm menu thì cuộn mượt tới khối */
+    body {
+      font-family: "Be Vietnam Pro", system-ui, sans-serif;
+      color: var(--text);
+      background: var(--white);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img, svg { display: block; }
+
+    /* Khung giữa trang: giới hạn độ rộng, chừa lề 16px trên điện thoại */
+    .container { max-width: var(--container); margin: 0 auto; padding: 0 16px; }
+
+    .section { padding: 72px 0; }
+    .section--soft { background: var(--bg-soft); }
+    .section__title { font-size: 30px; font-weight: 800; color: var(--primary); text-align: center; }
+    .section__lead { color: var(--text-muted); text-align: center; max-width: 640px; margin: 8px auto 40px; }
+
+    /* ===== Nút bấm: 3 kiểu dùng lại nhiều nơi ===== */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; border-radius: 8px;
+      font-weight: 600; font-size: 15px; cursor: pointer;
+      border: 2px solid transparent; transition: .2s;
+      font-family: inherit;
+    }
+    .btn--primary { background: var(--accent); color: var(--white); }
+    .btn--primary:hover { background: var(--primary); }
+    .btn--outline { border-color: var(--white); color: var(--white); background: transparent; }
+    .btn--outline:hover { background: var(--white); color: var(--primary); }
+    .btn--light { background: var(--white); color: var(--primary); border-color: var(--border); }
+    .btn--light:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ===== 1. Thanh trên cùng: hotline + giờ mở cửa ===== */
+    .topbar { background: var(--primary-dark); color: #c9d6ea; font-size: 13px; }
+    .topbar .container { display: flex; justify-content: space-between; gap: 12px; padding-top: 8px; padding-bottom: 8px; flex-wrap: wrap; }
+    .topbar strong { color: var(--white); }
+
+    /* ===== 2. Menu chính: dính trên đầu khi cuộn để luôn thấy nút Đăng nhập ===== */
+    .header { position: sticky; top: 0; z-index: 50; background: var(--white); border-bottom: 1px solid var(--border); }
+    .header .container { display: flex; align-items: center; justify-content: space-between; height: 68px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 20px; color: var(--primary); }
+    .logo__mark {
+      width: 38px; height: 38px; border-radius: 8px; background: var(--primary);
+      color: var(--white); display: grid; place-items: center; font-size: 16px;
+    }
+    .logo small { display: block; font-size: 11px; font-weight: 500; color: var(--text-muted); line-height: 1.2; }
+    .nav { display: flex; align-items: center; gap: 28px; }
+    .nav a { font-weight: 600; font-size: 15px; }
+    .nav a:hover { color: var(--accent); }
+    .menu-toggle { display: none; background: none; border: 0; font-size: 26px; cursor: pointer; color: var(--primary); }
+
+    /* ===== 3. Hero: khối giới thiệu lớn đầu trang ===== */
+    /* Ảnh kho hàng làm nền, phủ lớp màu xanh mờ để chữ trắng vẫn đọc rõ */
+    .hero {
+      background:
+        linear-gradient(115deg, rgba(8,44,92,.94) 0%, rgba(11,60,125,.85) 45%, rgba(30,111,217,.55) 100%),
+        url("images/hero-kho-hang.jpg") center / cover no-repeat;
+      color: var(--white);
+    }
+    .hero .container { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; padding-top: 72px; padding-bottom: 72px; }
+    .hero__tag { display: inline-block; background: rgba(255,255,255,.15); padding: 6px 14px; border-radius: 99px; font-size: 13px; font-weight: 600; margin-bottom: 16px; }
+    .hero h1 { font-size: 44px; line-height: 1.2; font-weight: 800; }
+    .hero p { margin: 16px 0 28px; font-size: 17px; color: #dbe6f7; max-width: 520px; }
+    .hero__actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    /* Thẻ minh họa bên phải hero: tóm tắt nhanh lợi ích chính */
+    .hero__card { background: var(--white); color: var(--text); border-radius: var(--radius); padding: 24px; box-shadow: 0 20px 40px rgba(0,0,0,.18); }
+    .hero__card h3 { font-size: 16px; color: var(--primary); margin-bottom: 14px; }
+    .hero__card ul { list-style: none; display: grid; gap: 12px; }
+    .hero__card li { display: flex; gap: 12px; align-items: center; padding: 12px; background: var(--bg-soft); border-radius: 8px; font-size: 14px; }
+    .hero__card li span { font-size: 20px; }
+
+    /* ===== 4. Sản phẩm: lưới thẻ tự xuống dòng theo độ rộng màn hình ===== */
+    .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; transition: .2s; overflow: hidden; }
+    .card:hover { border-color: var(--accent); box-shadow: 0 10px 24px rgba(11,60,125,.08); transform: translateY(-2px); }
+    /* Ảnh đầu thẻ tràn sát mép: margin âm bù lại padding 24px của thẻ */
+    .card__img { width: calc(100% + 48px); height: 170px; object-fit: cover; margin: -24px -24px 16px; transition: transform .4s; }
+    .card:hover .card__img { transform: scale(1.05); }
+    .card h3 { font-size: 18px; color: var(--primary); margin-bottom: 6px; }
+    .card p { color: var(--text-muted); font-size: 14px; }
+    .card__unit { display: inline-block; margin-top: 12px; font-size: 12px; font-weight: 600; color: var(--accent); background: #e8f0fc; padding: 4px 10px; border-radius: 99px; }
+
+    /* ===== 5. Lý do chọn: 5 ô, có số thứ tự để dễ đọc lướt ===== */
+    .reasons { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .reason { text-align: center; padding: 24px 16px; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); }
+    .reason__num { width: 44px; height: 44px; margin: 0 auto 12px; border-radius: 50%; background: var(--primary); color: var(--white); display: grid; place-items: center; font-weight: 800; }
+    .reason h3 { font-size: 16px; margin-bottom: 6px; }
+    .reason p { font-size: 14px; color: var(--text-muted); }
+
+    /* ===== Thư viện ảnh kho & đội ngũ: ảnh lớn bên trái, 2 ảnh nhỏ xếp chồng bên phải ===== */
+    .gallery { display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 220px 220px; gap: 16px; }
+    .gallery figure { position: relative; border-radius: var(--radius); overflow: hidden; }
+    .gallery figure:first-child { grid-row: span 2; }
+    .gallery img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s; }
+    .gallery figure:hover img { transform: scale(1.04); }
+    /* Chú thích nằm đè lên đáy ảnh, nền tối dần để chữ dễ đọc */
+    .gallery figcaption {
+      position: absolute; left: 0; right: 0; bottom: 0; padding: 32px 16px 14px;
+      background: linear-gradient(transparent, rgba(8,44,92,.9)); color: var(--white); font-weight: 600; font-size: 15px;
+    }
+
+    /* ===== 6. Giới thiệu ===== */
+    .about__photo { width: 100%; height: 100%; min-height: 320px; object-fit: cover; border-radius: var(--radius); box-shadow: 0 20px 40px rgba(11,60,125,.15); }
+    .about { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .about h2 { font-size: 30px; color: var(--primary); font-weight: 800; margin-bottom: 12px; }
+    .about p { color: var(--text-muted); margin-bottom: 12px; }
+    .about__stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 24px; }
+    /* Nền trắng + viền vì khối Giới thiệu đã dùng nền xám nhạt, tránh ô số bị chìm */
+    .stat { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; }
+    .stat strong { display: block; font-size: 28px; color: var(--primary); }
+    .stat span { font-size: 14px; color: var(--text-muted); }
+
+    /* ===== 7. Liên hệ: dải màu nổi bật để kêu gọi hành động ===== */
+    .contact { background: var(--primary); color: var(--white); }
+    .contact .container { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+    .contact h2 { font-size: 30px; font-weight: 800; }
+    .contact p { color: #c9d6ea; margin: 8px 0 24px; }
+    .contact__list { list-style: none; display: grid; gap: 14px; background: rgba(255,255,255,.08); padding: 24px; border-radius: var(--radius); }
+    .contact__list li { display: flex; gap: 12px; }
+    .contact__list b { display: block; font-size: 13px; color: #c9d6ea; font-weight: 500; }
+
+    .footer { background: var(--primary-dark); color: #9fb1cc; font-size: 13px; padding: 20px 0; }
+    .footer .container { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+    /* ===== Điện thoại & máy tính bảng (≤ 860px): xếp 1 cột, menu thu vào nút ☰ ===== */
+    @media (max-width: 860px) {
+      .menu-toggle { display: block; }
+      .nav {
+        display: none; position: absolute; top: 68px; left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 0;
+        background: var(--white); border-bottom: 1px solid var(--border); padding: 8px 16px 16px;
+      }
+      .nav.is-open { display: flex; }
+      .nav a { padding: 12px 0; border-bottom: 1px solid var(--border); }
+      .nav .btn { margin-top: 12px; justify-content: center; }
+      .hero .container, .about, .contact .container { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+      .section { padding: 56px 0; }
+      .section__title, .about h2, .contact h2 { font-size: 24px; }
+      .topbar__hours { display: none; } /* màn nhỏ: chỉ giữ hotline cho gọn */
+      /* Thư viện ảnh: điện thoại xếp 1 cột, mỗi ảnh cao 200px */
+      .gallery { grid-template-columns: 1fr; grid-template-rows: none; grid-auto-rows: 200px; }
+      .gallery figure:first-child { grid-row: auto; }
+      .about__photo { min-height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Thanh trên cùng -->
+  <div class="topbar">
+    <div class="container">
+      <span>Hotline: <strong>0900 000 000</strong> (demo)</span>
+      <span class="topbar__hours">Mở cửa: 7:00 – 18:00, Thứ 2 – Chủ nhật</span>
+    </div>
+  </div>
+
+  <!-- 2. Menu chính -->
+  <header class="header">
+    <div class="container">
+      <a href="#trang-chu" class="logo">
+        <span class="logo__mark">TP</span>
+        <span>Thành Phát<small>Cơ khí & Vật tư xây dựng</small></span>
+      </a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      <nav class="nav" id="mainNav">
+        <a href="#gioi-thieu">Về Thành Phát</a>
+        <a href="#san-pham">Sản phẩm</a>
+        <a href="#dich-vu">Dịch vụ</a>
+        <a href="#kho-hang">Kho hàng & Đội ngũ</a>
+        <a href="#lien-he">Liên hệ</a>
+        <button class="btn btn--primary" id="loginBtn" type="button">Đăng nhập</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- 3. Hero -->
+    <section class="hero" id="trang-chu">
+      <div class="container">
+        <div>
+          <span class="hero__tag">Bán lẻ & bán sỉ cho nhà thầu</span>
+          <h1>Thành Phát – Đồ cơ khí & Vật tư xây dựng</h1>
+          <p>Ốc vít, bu lông, dây điện, dụng cụ cơ khí và vật tư công trình. Hàng có sẵn, báo giá nhanh, công nợ linh hoạt cho nhà thầu.</p>
+          <div class="hero__actions">
+            <a href="tel:0900000000" class="btn btn--light">📞 Gọi báo giá</a>
+            <a href="#san-pham" class="btn btn--outline">Xem sản phẩm</a>
+          </div>
+        </div>
+        <div class="hero__card">
+          <h3>Mua hàng tại Thành Phát</h3>
+          <ul>
+            <li><span>📦</span> Kiểm tra tồn kho và báo giá ngay tại quầy</li>
+            <li><span>⚖️</span> Bán theo con, theo ký hoặc theo mét</li>
+            <li><span>🧾</span> Nhà thầu lấy hàng cả tháng, thanh toán cuối tháng</li>
+            <li><span>🔄</span> Nhận đổi trả hàng còn nguyên</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Giới thiệu: đặt ngay sau hero để khách hiểu về cửa hàng trước khi xem sản phẩm -->
+    <section class="section section--soft" id="gioi-thieu">
+      <div class="container about">
+        <div>
+          <h2>Về Thành Phát</h2>
+          <p>Thành Phát là cửa hàng chuyên đồ cơ khí và vật tư xây dựng, phục vụ thợ, hộ gia đình và các nhà thầu trong khu vực.</p>
+          <p>Hàng nhập trực tiếp từ nhiều nhà cung cấp, quản lý tồn kho chặt chẽ để luôn có hàng khi khách cần.</p>
+          <div class="about__stats">
+            <div class="stat"><strong>4</strong><span>Nhóm hàng chính</span></div>
+            <div class="stat"><strong>7/7</strong><span>Ngày mở cửa trong tuần</span></div>
+            <div class="stat"><strong>3</strong><span>Đơn vị bán: con, ký, mét</span></div>
+            <div class="stat"><strong>1</strong><span>Lần thanh toán/tháng cho thầu</span></div>
+          </div>
+        </div>
+        <img class="about__photo" src="images/gioi-thieu-cong-nhan.jpg" alt="Đội công nhân mặc áo bảo hộ tại công trình" loading="lazy">
+      </div>
+    </section>
+
+    <!-- 4. Sản phẩm -->
+    <section class="section" id="san-pham">
+      <div class="container">
+        <h2 class="section__title">Danh mục sản phẩm</h2>
+        <p class="section__lead">Đầy đủ vật tư cho thợ cơ khí, thợ điện và nhà thầu xây dựng.</p>
+        <div class="grid">
+          <article class="card">
+            <img class="card__img" src="images/sp-oc-vit-bu-long.jpg" alt="Bộ dụng cụ và phụ kiện ốc vít" loading="lazy">
+            <h3>Ốc vít & Bu lông</h3>
+            <p>Ốc, vít, bu lông, tán, long đền đủ kích cỡ: inox, thép mạ kẽm.</p>
+            <span class="card__unit">Bán theo con / theo ký</span>
+          </article>
+          <article class="card">
+            <img class="card__img" src="images/sp-day-dien.jpg" alt="Thợ điện đang đấu nối dây điện" loading="lazy">
+            <h3>Dây điện & Phụ kiện</h3>
+            <p>Dây điện, cáp, ống luồn, ổ cắm, công tắc cho nhà ở và công trình.</p>
+            <span class="card__unit">Bán theo mét / cuộn</span>
+          </article>
+          <article class="card">
+            <img class="card__img" src="images/sp-dung-cu-co-khi.jpg" alt="Kìm và dụng cụ cơ khí trên giá" loading="lazy">
+            <h3>Dụng cụ cơ khí</h3>
+            <p>Máy khoan, máy cắt, cờ lê, mỏ lết, đá cắt, mũi khoan các loại.</p>
+            <span class="card__unit">Bán theo cái / bộ</span>
+          </article>
+          <article class="card">
+            <img class="card__img" src="images/sp-vat-tu-xay-dung.jpg" alt="Công nhân thi công cốt thép tại công trình" loading="lazy">
+            <h3>Vật tư xây dựng</h3>
+            <p>Xi măng, sắt thép, keo, sơn chống thấm và phụ kiện công trình.</p>
+            <span class="card__unit">Bán theo bao / cây / thùng</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Lý do chọn Thành Phát -->
+    <section class="section section--soft" id="dich-vu">
+      <div class="container">
+        <h2 class="section__title">Vì sao chọn Thành Phát?</h2>
+        <p class="section__lead">Dịch vụ thiết kế cho cả khách lẻ và nhà thầu xây dựng.</p>
+        <div class="reasons">
+          <div class="reason">
+            <div class="reason__num">1</div>
+            <h3>Hàng sẵn kho</h3>
+            <p>Kiểm tra tồn kho ngay, lấy hàng liền không phải chờ.</p>
+          </div>
+          <div class="reason">
+            <div class="reason__num">2</div>
+            <h3>Giá sỉ cho thầu</h3>
+            <p>Giá tốt khi lấy số lượng lớn cho công trình.</p>
+          </div>
+          <div class="reason">
+            <div class="reason__num">3</div>
+            <h3>Công nợ cuối tháng</h3>
+            <p>Nhà thầu lấy hàng cả tháng, thanh toán một lần.</p>
+          </div>
+          <div class="reason">
+            <div class="reason__num">4</div>
+            <h3>Đổi trả dễ dàng</h3>
+            <p>Hàng còn nguyên được nhận lại, trừ thẳng vào công nợ.</p>
+          </div>
+          <div class="reason">
+            <div class="reason__num">5</div>
+            <h3>Đơn vị linh hoạt</h3>
+            <p>Mua lẻ theo con, sỉ theo ký, dây điện theo mét.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Thư viện ảnh kho & đội ngũ: cho khách thấy cửa hàng có kho lớn, hàng sẵn -->
+    <section class="section" id="kho-hang">
+      <div class="container">
+        <h2 class="section__title">Kho hàng & Đội ngũ</h2>
+        <p class="section__lead">Hàng hóa được sắp xếp theo khu, kiểm kê định kỳ để luôn sẵn sàng giao cho khách.</p>
+        <div class="gallery">
+          <figure>
+            <img src="images/kho-loi-di.jpg" alt="Lối đi giữa các kệ hàng cao trong kho" loading="lazy">
+            <figcaption>Kho hàng sắp xếp theo khu, dễ tìm – lấy nhanh</figcaption>
+          </figure>
+          <figure>
+            <img src="images/kho-ke-hang.jpg" alt="Kệ hàng chất đầy thùng hàng" loading="lazy">
+            <figcaption>Hàng nhập theo lô từ nhiều nhà cung cấp</figcaption>
+          </figure>
+          <figure>
+            <img src="images/co-khi-han.jpg" alt="Thợ cơ khí đang hàn" loading="lazy">
+            <figcaption>Phục vụ thợ cơ khí & nhà thầu</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Liên hệ -->
+    <section class="section contact" id="lien-he">
+      <div class="container">
+        <div>
+          <h2>Cần báo giá? Gọi ngay cho Thành Phát</h2>
+          <p>Nhân viên sẽ kiểm tra tồn kho và báo giá cho bạn trong vài phút.</p>
+          <a href="tel:0900000000" class="btn btn--light">📞 0900 000 000</a>
+        </div>
+        <ul class="contact__list">
+          <li><span>📍</span><div><b>Địa chỉ (demo)</b>123 Đường Demo, Quận 7, TP.HCM</div></li>
+          <li><span>📞</span><div><b>Hotline (demo)</b>0900 000 000</div></li>
+          <li><span>✉️</span><div><b>Email (demo)</b>lienhe@example.com</div></li>
+          <li><span>🕖</span><div><b>Giờ mở cửa</b>7:00 – 18:00, Thứ 2 – Chủ nhật</div></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <span>© <span id="year"></span> Thành Phát. Thông tin liên hệ chỉ dùng để demo.</span>
+      <span>Đồ cơ khí & Vật tư xây dựng</span>
+    </div>
+  </footer>
+
+  <script>
+    // Mở/đóng menu trên điện thoại: màn nhỏ không đủ chỗ hiện menu ngang nên gom vào nút ☰
+    const menuToggle = document.getElementById('menuToggle');
+    const mainNav = document.getElementById('mainNav');
+    menuToggle.addEventListener('click', () => {
+      const isOpen = mainNav.classList.toggle('is-open');
+      menuToggle.setAttribute('aria-expanded', isOpen);
+    });
+    // Bấm một mục menu thì tự đóng menu, để người dùng thấy nội dung vừa cuộn tới
+    mainNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => mainNav.classList.remove('is-open'));
+    });
+
+    // Nút Đăng nhập: màn hình quản lý chưa làm nên chỉ báo trước cho người dùng
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      alert('Tính năng đăng nhập đang phát triển.');
+    });
+
+    // Năm ở footer tự cập nhật, khỏi phải sửa tay mỗi năm
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
